@@ -13,11 +13,6 @@ h1 {
     color: #444;
 }
 
-h2 {
-    text-align: center;
-    color: #444;
-}
-
 input[type="number"], select, textarea {
     width: calc(100% - 20px);
     padding: 10px;
