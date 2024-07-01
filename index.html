@@ -165,7 +165,7 @@ var chartData = {
 
 var tapIdCounter = 0;
 
-        function Tapadd() {
+function Tapadd() {
             var Tapbeat = parseFloat(document.getElementById("Tapbeat").value);
             var Taplane = parseInt(document.getElementById("Taplane").value);
             var Tapwidth = parseInt(document.getElementById("Tapwidth").value) / 2;
@@ -204,12 +204,20 @@ var tapIdCounter = 0;
             var tapId = parseInt(tapInfo.getAttribute("data-tapid"));
 
             // chartDataから削除
-            chartData.usc.objects = chartData.usc.objects.filter((_, index) => index !== tapId);
+            chartData.usc.objects = chartData.usc.objects.filter((obj, index) => {
+                return index !== tapId || obj.type !== "tap";
+            });
+
+            // 削除した後のインデックスを調整
+            document.querySelectorAll(".saved-info[data-tapid]").forEach((info, index) => {
+                info.setAttribute("data-tapid", index);
+            });
 
             // 表示から削除
             tapInfo.remove();
-        }
 
+            console.log(chartData);
+        }
 var flickIdCounter = 0;
 
 function Flickadd() {
