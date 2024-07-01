@@ -166,21 +166,24 @@ var chartData = {
 };
 
 var tapIdCounter = 0;
+var tapIdCounter = 0;
 
-function Tapadd() {
+        function Tapadd() {
             var Tapbeat = parseFloat(document.getElementById("Tapbeat").value);
             var Taplane = parseInt(document.getElementById("Taplane").value);
             var Tapwidth = parseInt(document.getElementById("Tapwidth").value) / 2;
             var Tapcritical = document.getElementById("Tapcritical").checked;
+            var Taptrace = document.getElementById("Taptrace").checked;
 
             if (!isNaN(Tapbeat) && !isNaN(Taplane) && !isNaN(Tapwidth)) {
                 var tapObject = {
                     "beat": Tapbeat,
+                    "critical": Tapcritical,
                     "lane": Taplane,
                     "size": Tapwidth,
-                    "critical": Tapcritical,
                     "timeScaleGroup": 0,
-                    "type": "tap"
+                    "trace": Taptrace,
+                    "type": "single"
                 };
 
                 chartData.usc.objects.push(tapObject);
@@ -190,7 +193,7 @@ function Tapadd() {
                 var tapInfo = document.createElement("div");
                 tapInfo.className = "saved-info";
                 tapInfo.setAttribute("data-tapid", tapIdCounter);
-                tapInfo.innerHTML = `タップ Beat:${Tapbeat}, Lane:${Taplane}, 幅:${Tapwidth * 2}, クリティカル:${Tapcritical ? '⭕' : '❌'} <button onclick="deleteTap(this)">削除</button>`;
+                tapInfo.innerHTML = `タップ Beat:${Tapbeat}, Lane:${Taplane}, 幅:${Tapwidth * 2}, クリティカル:${Tapcritical ? '⭕' : '❌'}, トレース:${Taptrace ? '⭕' : '❌'} <button onclick="deleteTap(this)">削除</button>`;
 
                 var memoArea = document.querySelector("textarea");
                 memoArea.insertAdjacentElement("beforebegin", tapInfo);
@@ -207,7 +210,7 @@ function Tapadd() {
 
             // chartDataから削除
             chartData.usc.objects = chartData.usc.objects.filter((obj, index) => {
-                return index !== tapId || obj.type !== "tap";
+                return index !== tapId || obj.type !== "single";
             });
 
             // 削除した後のインデックスを調整
@@ -220,6 +223,7 @@ function Tapadd() {
 
             console.log(chartData);
         }
+    
 var flickIdCounter = 0;
 
 function Flickadd() {
