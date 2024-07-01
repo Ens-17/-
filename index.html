@@ -168,61 +168,64 @@ var chartData = {
 var tapIdCounter = 0;
 var tapIdCounter = 0;
 
-        function Tapadd() {
-            var Tapbeat = parseFloat(document.getElementById("Tapbeat").value);
-            var Taplane = parseInt(document.getElementById("Taplane").value);
-            var Tapwidth = parseInt(document.getElementById("Tapwidth").value) / 2;
-            var Tapcritical = document.getElementById("Tapcritical").checked;
-            var Taptrace = document.getElementById("Taptrace").checked;
+function Tapadd() {
+    var Tapbeat = parseFloat(document.getElementById("Tapbeat").value);
+    var Taplane = parseInt(document.getElementById("Taplane").value);
+    var Tapwidth = parseInt(document.getElementById("Tapwidth").value) / 2;
+    var Tapcritical = document.getElementById("Tapcritical").checked;
+    var Taptrace = document.getElementById("Taptrace").checked;
 
-            if (!isNaN(Tapbeat) && !isNaN(Taplane) && !isNaN(Tapwidth)) {
-                var tapObject = {
-                    "beat": Tapbeat,
-                    "critical": Tapcritical,
-                    "lane": Taplane,
-                    "size": Tapwidth,
-                    "timeScaleGroup": 0,
-                    "trace": Taptrace,
-                    "type": "single"
-                };
+    if (!isNaN(Tapbeat) && !isNaN(Taplane) && !isNaN(Tapwidth)) {
+        var tapObject = {
+            "id": tapIdCounter,
+            "beat": Tapbeat,
+            "critical": Tapcritical,
+            "lane": Taplane,
+            "size": Tapwidth,
+            "timeScaleGroup": 0,
+            "trace": Taptrace,
+            "type": "single"
+        };
 
-                chartData.usc.objects.push(tapObject);
-                console.log(chartData);
+        chartData.usc.objects.push(tapObject);
+        console.log(chartData);
 
-                // 表示用の要素を作成
-                var tapInfo = document.createElement("div");
-                tapInfo.className = "saved-info";
-                tapInfo.setAttribute("data-tapid", tapIdCounter);
-                tapInfo.innerHTML = `タップ Beat:${Tapbeat}, Lane:${Taplane}, 幅:${Tapwidth * 2}, クリティカル:${Tapcritical ? '⭕' : '❌'}, トレース:${Taptrace ? '⭕' : '❌'} <button onclick="deleteTap(this)">削除</button>`;
+        // 表示用の要素を作成
+        var tapInfo = document.createElement("div");
+        tapInfo.className = "saved-info";
+        tapInfo.setAttribute("data-tapid", tapIdCounter);
+        tapInfo.innerHTML = `タップ  Beat:${Tapbeat}, レーン:${Taplane}, 幅:${Tapwidth * 2}, クリティカル化:${Tapcritical ? '⭕' : '❌'}, トレース化:${Taptrace ? '⭕' : '❌'}<button onclick="deleteTap(this)">削除</button>`;
 
-                var memoArea = document.querySelector("textarea");
-                memoArea.insertAdjacentElement("beforebegin", tapInfo);
+        var memoArea = document.querySelector("textarea");
+        memoArea.insertAdjacentElement("beforebegin", tapInfo);
 
-                tapIdCounter++;
-            } else {
-                alert("全てのフィールドに有効な値を入力してください。");
-            }
+        tapIdCounter++;
+    } else {
+        alert("全てのフィールドに有効な値を入力してください。");
+    }
+}
+
+function deleteTap(button) {
+    var infoElement = button.parentElement;
+    var tapId = parseInt(infoElement.getAttribute("data-tapid")); // 要素のIDを取得
+
+    var index = findTapIndexById(tapId);
+    if (index !== -1) {
+        chartData.usc.objects.splice(index, 1);
+        console.log(chartData);
+    }
+
+    infoElement.parentNode.removeChild(infoElement);
+}
+
+function findTapIndexById(tapId) {
+    for (var i = 0; i < chartData.usc.objects.length; i++) {
+        if (chartData.usc.objects[i].id === tapId) {
+            return i;
         }
-
-        function deleteTap(button) {
-            var tapInfo = button.parentElement;
-            var tapId = parseInt(tapInfo.getAttribute("data-tapid"));
-
-            // chartDataから削除
-            chartData.usc.objects = chartData.usc.objects.filter((obj, index) => {
-                return index !== tapId || obj.type !== "single";
-            });
-
-            // 削除した後のインデックスを調整
-            document.querySelectorAll(".saved-info[data-tapid]").forEach((info, index) => {
-                info.setAttribute("data-tapid", index);
-            });
-
-            // 表示から削除
-            tapInfo.remove();
-
-            console.log(chartData);
-        }
+    }
+    return -1;
+}
     
 var flickIdCounter = 0;
 
